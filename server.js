@@ -8,8 +8,6 @@ var mysql=require("mysql");//외부모듈..
 //모듈도 사용해보자!!
 var constr=require("./dbstring.js");
 
-
-
 var app=express();//express 객체 생성
 var server=http.createServer(app);//서버 생성
 
@@ -23,11 +21,10 @@ var pool=mysql.createPool(constr);
 메서드가 코딩되어져야 한다...비현실적...
 해결책? 정적자원의 위치를 지정하면된다..바로 이 기능은 
          express 모듈에서 지원한다...
-
  */
 
  //express 모듈은 각종 미들웨어라 불리는 기능을 지원하는데
- //미들웨서를 사용시 use() 라는 메서드를 이용할 수 있다..
+ //미들웨어를 사용시 use() 라는 메서드를 이용할 수 있다..
  //현재 실행중인 js파일의 하드디스크 물리적 경로 반환 
  //__dirname 전역변수
 app.use(express.static(__dirname+"/"));
@@ -72,7 +69,7 @@ app.post("/board/write", function(request, response){
                      }else{
                         console.log("등록성공"); 
                         
-                        //목록을 보여주기!!!
+                        //목록을 보여주기!!!                        
                      }                     
                 } 
                 //풀에 다시 반납하기!!
@@ -100,7 +97,9 @@ app.get("/board/list", function(request, response){
                 }else{
                     console.log(result);     
                     //ejs 파일 실행!!!
-                    response.render("list");                   
+                    response.render("list",{
+                        rows:result 
+                    });                   
                 }
             });                        
         }        
