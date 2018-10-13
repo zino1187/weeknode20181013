@@ -175,9 +175,10 @@ app.post("/board/edit", function(request, response){
                 }else{
                     response.writeHead(200, {"Content-Type":"text/html;charset=utf-8"});//헤더정보...
                     if(result.affectedRows==0){
-                        response.end("<script>alert('수정실패');</script>");                                                    
+                        response.end("<script>alert('수정실패');history.back();</script>");                                                    
                     }else{
-                        response.end("<script>alert('수정성공');</script>");                                                    
+                        response.end("<script>alert('수정성공');location.href='/board/list';</script>");                                                    
+                        
                     }                            
                 } 
                 pool.releaseConnection(function(e){
