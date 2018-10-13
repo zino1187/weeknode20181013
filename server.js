@@ -93,7 +93,7 @@ app.get("/board/list", function(request, response){
         if(error){
             console.log(error);
         }else{
-            var sql="select writer, title ,date_format(regdate,'%Y-%m-%d') as regdate,hit from notice order by notice_id desc";                
+            var sql="select notice_id,writer, title ,date_format(regdate,'%Y-%m-%d') as regdate,hit from notice order by notice_id desc";                
             con.query(sql, function(err, result, fields){
                 if(err){
                     console.log(err);        
@@ -104,12 +104,32 @@ app.get("/board/list", function(request, response){
                         rows:result 
                     });                   
                 }
+                pool.releaseConnection(con, function(e){
+                });
             });                        
         }        
     });//대여!!
 
 });
 
+//글 상세보기
+//단순 링크이므로, get방식으로 요청이 들어옴..
+app.get("/board/detail", function(request, response){
+    //한건 조회!!!
+    pool.getConnection(function(error, con){
+        if(error){
+            console.log(error);
+        }else{
+            var sql="select * from notice where notice_id=?";
+            con.query(sql, [] , function(err, result, fields){
+
+            });
+        }
+    });//대여
+
+
+
+});
 
 server.listen(8888, function(){
     console.log("웹서버가 8888포트에서 가동중..");
