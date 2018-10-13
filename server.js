@@ -18,6 +18,24 @@ var server=http.createServer(app);//서버 생성
  //__dirname 전역변수
 app.use(express.static(__dirname+"/"));
 
+/* 게시판 관련 요청 처리 */
+app.post("/board/write", function(request, response){
+    //파라미터 값들이 제대로 전송되었는지 확인...
+    
+    //express 모듈을 사용하면 body 속성을 이용하여 
+    //post방식으로 전송된 파라미터값들을 받아올수있다..
+    console.log(request.body);
+});
+
 server.listen(8888, function(){
     console.log("웹서버가 8888포트에서 가동중..");
 });
+
+
+
+
+
+
+
+
+
