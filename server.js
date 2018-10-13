@@ -115,16 +115,37 @@ app.get("/board/list", function(request, response){
 //글 상세보기
 //단순 링크이므로, get방식으로 요청이 들어옴..
 app.get("/board/detail", function(request, response){
+    //get방식으로 전달된 즉 헤더를 타고 날아온 파라미터를
+    //받아보자!!!
+    //console.log(request.url);            
+    console.log(request.query);//json 객체
+    var notice_id=request.query.notice_id;
+
     //한건 조회!!!
     pool.getConnection(function(error, con){
         if(error){
             console.log(error);
         }else{
             var sql="select * from notice where notice_id=?";
-            con.query(sql, [] , function(err, result, fields){
+            
 
+            con.query(sql, [notice_id] , function(err, result, fields){
+                if(err){//에러가 났다면...
+                    console.log(err);                            
+                }else{
+                    console.log(result);
+
+                    //result 변수를 상세보기 페이지에 전달!!
+                    response.render("detail", {
+                        row:result[0]    
+                    });//ejs에 데이터 전달!!                        
+                } 
+                pool.releaseConnection(function(e){
+                });//반납
             });
         }
+        
+
     });//대여
 
 
