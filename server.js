@@ -1,8 +1,20 @@
 var http=require("http"); //기본서버 모듈이므로 기본기능..
 var express=require("express");//기본서버 업그레이드
+var bodyParser=require("body-parser");//파라미터값들을 json
+                                                        //형태 변환하여 받아줌..
+var mysql=require("mysql");//외부모듈..   
+
+//지금까지는 내부,외부 모듈만 사용해 왓으나, 개발자가 정의한
+//모듈도 사용해보자!!
+var constr=require("./dbstring.js");
 
 var app=express();//express 객체 생성
 var server=http.createServer(app);//서버 생성
+
+/*매요청마다 db접속을 발생시키지 않기 위해 
+커넥션풀을 이용해본다..  */
+var pool=mysql.createPool(constr);
+
 
 /* html, image, css, 동영상 파일등이 정적자원 까지도
 일일이 app.get() 으로 처리하게 되면, 서버에 너무 많은
@@ -18,6 +30,10 @@ var server=http.createServer(app);//서버 생성
  //__dirname 전역변수
 app.use(express.static(__dirname+"/"));
 
+//extended 의미 파라미터의 json 객체 안에 또 json을 포함할수있는지
+app.use(bodyParser.urlencoded({"extended":false}));
+app.use(bodyParser.json());
+
 /* 게시판 관련 요청 처리 */
 app.post("/board/write", function(request, response){
     //파라미터 값들이 제대로 전송되었는지 확인...
@@ -25,6 +41,36 @@ app.post("/board/write", function(request, response){
     //express 모듈을 사용하면 body 속성을 이용하여 
     //post방식으로 전송된 파라미터값들을 받아올수있다..
     console.log(request.body);
+    
+    var writer=request.body.writer;
+    var title=request.body.title;
+    var content=request.body.content;
+
+    //커넥션풀로부터 접속객체 하나를 빌려오자!!
+    pool.getConnection(function(error, con){
+        if(error){
+            console.log(error);                
+        }else{
+            //제대로 풀로부터 접속 객체 얻어왔다면...
+            var sql="insert into notice(writer,title,content)";
+            sql+=" values(?,?,?)";
+
+            con.query(sql,[writer,title,content], function(err, result){
+                if(err){//쿼리 시도자체가 실패한 경우..
+                    console.log(err);                        
+                }else{
+                     console.log(result);  
+                     if(result.affectedRows==0){
+                        console.log("등록실패");                            
+                     }else{
+                        console.log("등록성공");                                
+                     }                     
+                }                
+            });
+        }        
+    });    
+    
+
 });
 
 server.listen(8888, function(){
