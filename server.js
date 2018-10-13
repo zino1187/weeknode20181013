@@ -69,7 +69,10 @@ app.post("/board/write", function(request, response){
                      }else{
                         console.log("등록성공"); 
                         
-                        //목록을 보여주기!!!                        
+                        //목록을 보여주기!!!   
+                        //클라이언트의 브라우저로 하여금
+                        //지정한 url 로 다시 접속하라...
+                        response.redirect("/board/list");                     
                      }                     
                 } 
                 //풀에 다시 반납하기!!

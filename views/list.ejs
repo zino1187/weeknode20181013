@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -21,6 +21,17 @@
       background-color: #f2f2f2
     }
   </style>
+  <script>
+    window.addEventListener("load", function () {
+      var bt=document.getElementById("bt");
+
+      bt.addEventListener("click" , function(){
+          //write.html 요청~~~
+          location.href="/write.html";          
+      });
+
+    });
+  </script>
 </head>
 
 <body>
@@ -36,15 +47,26 @@
       <th>작성일</th>
     </tr>
 
-   <%for(var i=0;i<rows.length;i++){%>
-   <%var obj=rows[i];//해당 번째의 객체 꺼내기%>
+    <%for(var i=0;i<rows.length;i++){%>
+    <%var obj=rows[i];//해당 번째의 객체 꺼내기%>
     <tr>
       <td></td>
-      <td><%=obj.title%></td>
-      <td><%=obj.hit%></td>
-      <td><%=obj.regdate%></td>
+      <td>
+        <%=obj.title%>
+      </td>
+      <td>
+        <%=obj.hit%>
+      </td>
+      <td>
+        <%=obj.regdate%>
+      </td>
     </tr>
     <%}%>
+    <tr>
+      <td colspan="4" align="right">
+        <input type="button" value="글쓰기" id="bt">
+      </td>
+    </tr>
   </table>
 
 </body>
