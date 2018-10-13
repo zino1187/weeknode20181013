@@ -189,6 +189,43 @@ app.post("/board/edit", function(request, response){
 
 });
 
+//삭제 요청 처리
+app.get("/board/delete", function(request, response){
+    console.log(request.query);
+
+    //삭제 쿼리 수행
+    //delete from table where notice_id=넘파값    
+    var notice_id=request.query.notice_id;
+
+    console.log("삭제될 글의 id는  ",notice_id);
+
+    pool.getConnection(function(error,con){
+        if(error){
+            console.log(error);
+        }else{
+           var sql="delete from notice where notice_id=?";
+           
+           con.query(sql, [notice_id] , function(err, result){
+                if(err){
+                    console.log(err);                        
+                }else{
+                    //클라이언트 응답 데이터 전송
+                    response.writeHead(200,{"Content-Type":"text/json"});
+                    var obj;
+                    if(result.affectedRows==0){
+                        obj={result:0};                            
+                    }else{
+                        obj={result:1};
+                    }   
+                    response.end(JSON.stringify(obj));        
+                }
+                pool.releaseConnection(function(e){});
+           });//쿼리수행
+        }        
+    });
+
+});
+
 server.listen(8888, function(){
     console.log("웹서버가 8888포트에서 가동중..");
 });

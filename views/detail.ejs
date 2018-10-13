@@ -50,6 +50,29 @@ $(function(){
         $("form").submit();//전송!!        
     });    
 
+    //삭제 이벤트 구현
+    //ajax 를 구현하는 방법 
+    //1.순수 자바스크립트 문법을 사용하는 법
+    //   XMLHttpRequest 객체와 이벤트를 일일이 처리
+    //2.JQuery가 지원하는 Ajax를 이용하는 법
+    $("#bt_del").click(function(){
+        //현재 글을 삭제해달라고 요청하되, 비동기로...
+        $.ajax({
+            url:"/board/delete",
+            type:"get",
+            data:{
+                notice_id:<%=row.notice_id%>
+            },
+            success:function(data){
+                if(data.result=="0"){
+                    alert("실패");
+                }else{
+                    alert("성공");
+                }          
+            }
+        });        
+    });
+
 });
 
 </script>    
