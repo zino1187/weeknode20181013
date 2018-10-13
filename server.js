@@ -167,10 +167,21 @@ app.post("/board/edit", function(request, response){
         }else{
             //수정 쿼리문 수행
             var sql="update  notice  set writer=?, title=?, content=?";                              
-            sql+=" where notice=?";
+            sql+=" where notice_id=?";
 
-            con.query(sql, [] , function(err, result){
-
+            con.query(sql, [writer, title, content, notice_id] , function(err, result){
+                if(err){
+                    console.log(err);                        
+                }else{
+                    response.writeHead(200, {"Content-Type":"text/html;charset=utf-8"});//헤더정보...
+                    if(result.affectedRows==0){
+                        response.end("<script>alert('수정실패');</script>");                                                    
+                    }else{
+                        response.end("<script>alert('수정성공');</script>");                                                    
+                    }                            
+                } 
+                pool.releaseConnection(function(e){
+                });               
             });
         }        
     });
