@@ -147,8 +147,19 @@ app.get("/board/detail", function(request, response){
         
 
     });//대여
+});
 
+//게시판 수정 요청 처리 
+app.post("/board/edit", function(request, response){
+    //수정 query문 수행...
+    //update notice set writer=넘파값, title=넘파값,
+    //content=넘파값 where notice_id=넘파값
+    var writer=request.body.writer;//json 형식으로....        
+    var title=request.body.title;
+    var content=request.body.content;
+    var notice_id=request.body.notice_id;
 
+    console.log(writer, title, content, notice_id);
 
 });
 
