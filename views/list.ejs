@@ -30,16 +30,19 @@
 
   <table>
     <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Points</th>
+      <th>No</th>
+      <th>제목</th>
+      <th>조회수</th>
+      <th>작성일</th>
     </tr>
 
    <%for(var i=0;i<rows.length;i++){%>
+   <%var obj=rows[i];//해당 번째의 객체 꺼내기%>
     <tr>
-      <td>Jill</td>
-      <td>Smith</td>
-      <td>50</td>
+      <td></td>
+      <td><%=obj.title%></td>
+      <td><%=obj.hit%></td>
+      <td><%=obj.regdate%></td>
     </tr>
     <%}%>
   </table>

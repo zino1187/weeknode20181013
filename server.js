@@ -90,7 +90,7 @@ app.get("/board/list", function(request, response){
         if(error){
             console.log(error);
         }else{
-            var sql="select * from notice order by notice_id desc";                
+            var sql="select writer, title ,date_format(regdate,'%Y-%m-%d') as regdate,hit from notice order by notice_id desc";                
             con.query(sql, function(err, result, fields){
                 if(err){
                     console.log(err);        
