@@ -161,6 +161,20 @@ app.post("/board/edit", function(request, response){
 
     console.log(writer, title, content, notice_id);
 
+    pool.getConnection(function(error, con){
+        if(error){
+            console.log(error);
+        }else{
+            //수정 쿼리문 수행
+            var sql="update  notice  set writer=?, title=?, content=?";                              
+            sql+=" where notice=?";
+
+            con.query(sql, [] , function(err, result){
+
+            });
+        }        
+    });
+
 });
 
 server.listen(8888, function(){
