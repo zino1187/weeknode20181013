@@ -8,6 +8,8 @@ var mysql=require("mysql");//외부모듈..
 //모듈도 사용해보자!!
 var constr=require("./dbstring.js");
 
+
+
 var app=express();//express 객체 생성
 var server=http.createServer(app);//서버 생성
 
@@ -29,6 +31,11 @@ var pool=mysql.createPool(constr);
  //현재 실행중인 js파일의 하드디스크 물리적 경로 반환 
  //__dirname 전역변수
 app.use(express.static(__dirname+"/"));
+//스프링과 마찬가지로 nodejs 에서도 정해진 뷰템플릿을 지원한다
+//jade, ejs 
+app.set("view engine", "ejs");//확장자를 명시할 필요없음..
+app.set("views", __dirname+"/views");//대신에 ejs 는 무조건
+//views 라는 디렉토리에 놓아야 한다...
 
 //extended 의미 파라미터의 json 객체 안에 또 json을 포함할수있는지
 app.use(bodyParser.urlencoded({"extended":false}));
@@ -63,15 +70,44 @@ app.post("/board/write", function(request, response){
                      if(result.affectedRows==0){
                         console.log("등록실패");                            
                      }else{
-                        console.log("등록성공");                                
+                        console.log("등록성공"); 
+                        
+                        //목록을 보여주기!!!
                      }                     
-                }                
+                } 
+                //풀에 다시 반납하기!!
+                pool.releaseConnection(con,function(e){
+                });                                                       
             });
         }        
     });    
     
 
 });
+
+// 게시판 목록요청
+app.get("/board/list", function(request, response){
+    //select 쿼리로 조회!!!
+    
+    pool.getConnection(function(error, con){
+        if(error){
+            console.log(error);
+        }else{
+            var sql="select * from notice order by notice_id desc";                
+            con.query(sql, function(err, result, fields){
+                if(err){
+                    console.log(err);        
+                }else{
+                    console.log(result);     
+                    //ejs 파일 실행!!!
+                    response.render("list");                   
+                }
+            });                        
+        }        
+    });//대여!!
+
+});
+
 
 server.listen(8888, function(){
     console.log("웹서버가 8888포트에서 가동중..");
